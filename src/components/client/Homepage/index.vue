@@ -1,4 +1,5 @@
 <template>
+    <Preloader />
     <div style="">
         <div class="">
             <section class=" main-sliders">
@@ -68,7 +69,6 @@
                             </swiper-slide>
                         </template>
                     </swiper>
-
                 </div>
             </section>
 
@@ -120,28 +120,32 @@
                         </div>
                         <div class="filter-list row clearfix">
                             <template v-for="(v, k) in list_rcm">
+
                                 <div class="shop-item mix music photography col-lg-3 col-md-6 col-sm-12">
-                                    <div class="inner-box">
-                                        <div class="image" style="width: 300px; height: 400px;">
-                                            <a href="/">
-                                                <div style>
-                                                    <img :src="v.hinh_anh"
-                                                        style="object-fit: cover; width: 300px; height: 400px;" />
+                                    <router-link :to="'/movie-detail/' + v.slug_phim">
+                                        <div class="inner-box">
+                                            <div class="image" style="width: 300px; height: 400px;">
+                                                <a href="/">
+                                                    <div style>
+                                                        <img :src="v.hinh_anh"
+                                                            style="object-fit: cover; width: 300px; height: 400px;" />
+                                                    </div>
+                                                </a>
+                                                <div class="cart-box text-center mb-1">
+                                                    <a class="cart" href="#" style><b>Trailer</b></a>
+                                                    <a class="cart" style href="s"><b>Đặt
+                                                            vé </b></a>
                                                 </div>
-                                            </a>
-                                            <div class="cart-box text-center mb-1">
-                                                <a class="cart" href="#" style><b>Trailer</b></a>
-                                                <a class="cart" style href="s"><b>Đặt
-                                                        vé </b></a>
+                                            </div>
+                                            <div class="lower-content">
+                                                <h6><a href="">
+                                                        <b>{{ v.ten_phim }}</b>
+                                                    </a>
+                                                </h6>
                                             </div>
                                         </div>
-                                        <div class="lower-content">
-                                            <h6><a href="">
-                                                    <b>{{ v.ten_phim }}</b>
-                                                </a>
-                                            </h6>
-                                        </div>
-                                    </div>
+                                    </router-link>
+
                                 </div>
                             </template>
                         </div>
@@ -328,7 +332,7 @@
                                                     nỉ non trong lá. Mùa hè ngây
                                                     ngô, giống như tôi vậy. Nó
                                                     chẳng làm
-                                                    được những điều tôi kí thác.wwwww
+                                                    được những điều tôi kí thác.
                                                     Nó để Hà Lan đốt tôi, đốt
                                                     rụi. Trái
                                                     tim tôi cháy thành tro, rơi
@@ -406,11 +410,13 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Autoplay, FreeMode } from 'swiper/modules';
 import axios from '../../../core/axios_request'
+import Preloader from '../../../layout/client/component_client/preloader.vue'
 
 export default {
     components: {
         Swiper,
         SwiperSlide,
+        Preloader
     },
     data() {
         return {
@@ -426,12 +432,12 @@ export default {
         };
     }, methods: {
         loadData() {
+            this.handlePreloader();
             axios.post('/homepage')
                 .then(res => {
                     this.list_phim = res.data.data;
                     this.list_rcm = this.shuffleList(this.list_phim);
                     console.log(this.list_phim);
-
                 })
 
         }, shuffleList(arr) {
@@ -442,6 +448,15 @@ export default {
             }
             console.log(arr1);
             return arr1.slice(0, 8);
+        }, handlePreloader() {
+            if ($('.loader-wrap').length) {
+                $('.loader-wrap').delay(1000).fadeOut(500);
+            }
+            setTimeout(() => {
+                $('.loader-wrap').css({
+                    // 'display': 'none'
+                });
+            }, 1000);
         }
     }, computed: {
 

@@ -5,15 +5,17 @@
             <input hidden type="text" id="hiddenCheck">
             <div class="auto-container">
                 <div class="inner-container d-flex justify-content-between align-items-center">
-
-                    <div class="logo-box d-flex align-items-center" style="margin-left: -50px;">
-                        <!-- Logo -->
-                        <div class="logo ms-2">
-                            <a href="/" class style="margin-left: 100px;"><img style="width: 130px; transform: scale(1.4);"
-                                    src="../../../assets/client/images/logo.png">
-                            </a>
+                    <router-link :to="{ name: 'homepage' }">
+                        <div class="logo-box d-flex align-items-center" style="margin-left: -50px;">
+                            <!-- Logo -->
+                            <div class="logo ms-2">
+                                <a class style="margin-left: 100px;"><img style="width: 130px; transform: scale(1.4);"
+                                        src="../../../assets/client/images/logo.png">
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    </router-link>
+
                     <div class="nav-outer clearfix">
                         <!-- Main Menu -->
                         <nav class="main-menu show navbar-expand-md">
