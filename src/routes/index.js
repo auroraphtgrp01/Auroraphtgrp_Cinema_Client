@@ -1,6 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {
+    createRouter,
+    createWebHistory
+} from 'vue-router'
 import client from './client'
-const routes = [...client]
+import auth from './auth'
+const routes = [...client, ...auth]
 
 const router = createRouter({
     history: createWebHistory(),

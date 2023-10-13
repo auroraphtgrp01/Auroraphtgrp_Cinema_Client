@@ -108,6 +108,82 @@
             </div>
         </section>
     </div>
+    <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background-color: #0e1317;">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><b class=" text-danger">LỊCH CHIẾU CỦA PHIM </b>
+                        <b class="text-warning">{{ dataMovie.ten_phim }}</b>
+                    </h1>
+                </div>
+                <div class="modal-body" style="padding-bottom: 20px;">
+                    <template v-if="dateTime.length == 0">
+                        <b class="text-warning">PHIM HIỆN CHƯA CÓ LỊCH CHIẾU</b>
+                    </template>
+                    <template v-for="(v, k) in dateTime">
+                        <template v-if="(k) == v.check">
+                            <h6><b class="text-warning">Ngày : {{ v.ngay_chieu
+                            }}</b></h6>
+                            <template v-for="(v1, k1)  in dateTime">
+                                <template v-if="v.check == v1.check">
+                                    <button v-on:click="generateHref(v1.id_lich_chieu)" class="btn btn-danger me-2 mt-2">{{
+                                        v1.gio_chieu }}</button>
+                                </template>
+                            </template>
+                            <hr class="text-white">
+                        </template>
+                    </template>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="products-section-three">
+        <div class="auto-container">
+            <div class="sec-title">
+                <h4><span>PHIM HAY </span> DÀNH CHO BẠN !</h4>
+            </div>
+            <div class="mixitup-gallery">
+                <!-- Filter -->
+                <div class="filters">
+                    <ul class="filter-tabs">
+                        <li class="active filter" data-role="button" data-filter="all"></li>
+                    </ul>
+                </div>
+                <div class="filter-list row clearfix">
+                    <template v-for="(v, k) in list_rcm">
+
+                        <div class="shop-item mix music photography col-lg-3 col-md-6 col-sm-12">
+                            <router-link :to="'/movie-detail/' + v.slug_phim">
+                                <div class="inner-box">
+                                    <div class="image" style="width: 300px; height: 400px;">
+                                        <a href="/">
+                                            <div style>
+                                                <img :src="v.hinh_anh"
+                                                    style="object-fit: cover; width: 300px; height: 400px;" />
+                                            </div>
+                                        </a>
+                                        <div class="cart-box text-center mb-1">
+                                            <a class="cart" href="#" style><b>Trailer</b></a>
+                                            <a class="cart" style href="s"><b>Đặt
+                                                    vé </b></a>
+                                        </div>
+                                    </div>
+                                    <div class="lower-content">
+                                        <h6><a href="">
+                                                <b>{{ v.ten_phim }}</b>
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </router-link>
+
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 <script>
 import axios from '../../../core/axios_request'
@@ -126,12 +202,13 @@ export default {
             hang_doc: 0,
             hang_ngangF: 0,
             dateObj: [],
+            list_rcm: [],
         }
     }, mounted() {
-
         this.loadDataFromURL();
     }, methods: {
         loadDataFromURL() {
+            this.loadData();
             this.handlePreloader();
             var currentURL = window.location.href;
             var parts = currentURL.split('/');
@@ -139,18 +216,14 @@ export default {
             let payload = {
                 'slug_phim': movieSlug,
             }
-            console.log(payload);
-
             axios
                 .post('/movie-details/dataset', payload)
                 .then((res) => {
-                    // console.log(res.data);
                     if (res.data.status) {
                         this.dataMovie = res.data.data;
                         this.data_lc = res.data.data_lc;
                         this.dateAndTime(this.data_lc);
                         this.listRcm = res.data.data_rcm;
-                        console.log(this.dataMovie);
                     } else {
                         this.dataMovie = res.data.data;
                         this.dateAndTime(this.data_lc);
@@ -159,6 +232,21 @@ export default {
                     }
 
                 });
+        }, loadData() {
+            axios.post('/homepage')
+                .then(res => {
+                    this.list_rcm = this.shuffleList(res.data.data);
+                    console.log(this.list_rcm);
+                })
+
+        }, shuffleList(arr) {
+            let arr1 = [...arr];
+            for (let i = arr1.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr1[i], arr1[j]] = [arr1[j], arr1[i]];
+            }
+            console.log(arr1);
+            return arr1.slice(0, 4);
         },
         getFirst(sentence) {
             if (sentence !== undefined) {
@@ -244,11 +332,16 @@ export default {
             if ($('.loader-wrap').length) {
                 $('.loader-wrap').delay(1000).fadeOut(500);
             }
-            setTimeout(() => {
-                $('.loader-wrap').css({
-                    // 'display': 'none'
-                });
-            }, 1000);
+        },
+        preloaderShow() {
+            if ($('.loader-wrap').length) {
+                $('.loader-wrap').show().delay(1000).fadeOut(500);
+            }
+        }
+    }, watch: {
+        $route(to, from) {
+            this.preloaderShow();
+            this.loadDataFromURL();
         }
     }
 }

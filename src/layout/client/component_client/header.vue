@@ -1,19 +1,22 @@
 <template>
-    <header class="main-header" id="headerNav" style="box-shadow: 0px 2px 3px rgba(255, 255, 255, 0.05);">
+    <header class="main-header" id="headerNav"
+        style="box-shadow: 0px 2px 3px rgba(255, 255, 255, 0.05); z-index: 9999999999999999999999;">
         <!-- Header Lower -->
         <div class="header-lower">
             <input hidden type="text" id="hiddenCheck">
             <div class="auto-container">
                 <div class="inner-container d-flex justify-content-between align-items-center">
-
-                    <div class="logo-box d-flex align-items-center" style="margin-left: -50px;">
-                        <!-- Logo -->
-                        <div class="logo ms-2">
-                            <a href="/" class style="margin-left: 100px;"><img style="width: 130px; transform: scale(1.4);"
-                                    src="../../../assets/client/images/logo.png">
-                            </a>
+                    <router-link :to="{ name: 'homepage' }">
+                        <div class="logo-box d-flex align-items-center" style="margin-left: -50px;">
+                            <!-- Logo -->
+                            <div class="logo ms-2">
+                                <a class style="margin-left: 100px;"><img style="width: 130px; transform: scale(1.4);"
+                                        src="../../../assets/client/images/logo.png">
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    </router-link>
+
                     <div class="nav-outer clearfix">
                         <!-- Main Menu -->
                         <nav class="main-menu show navbar-expand-md">
@@ -106,8 +109,10 @@
                         <!-- Cart Box -->
                         <div class="cart-box">
                             <div class="box-inner p-0">
-                                <a href="/login" class="btn btn-outline-danger phone p-2"><b class>Đăng
+
+                                <a class="btn btn-outline-danger phone p-2" v-on:click="loginRouter()"><b class>Đăng
                                         Nhập</b></a>
+
                             </div>
                         </div>
                         <!-- <div v-else class="cart-box">
@@ -196,7 +201,26 @@
     </header>
 </template>
 <script>
-export default {
 
-};
+import router from "../../../routes/index"
+import client from "../layout/index.vue"
+
+export default {
+    // beforeRouteUpdate(to, from, next) {
+    //     const layout2 = [
+    //         client
+    //     ];
+    //     layout2.forEach((com) => {
+    //         com.destroy();
+    //     });
+    //     next();
+    // },
+    methods: {
+        loginRouter() {
+            // router.push({ name: 'login-client' }, { replace: true });
+            console.log(router);
+            
+        }
+    }
+}
 </script>
